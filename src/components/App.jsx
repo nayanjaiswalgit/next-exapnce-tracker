@@ -1,4 +1,7 @@
-  import Index from '@/components/Home/Index'
+
+
+import './App.css'
+import Index from './components/Home'
 
 function App() {
 

@@ -10,46 +10,58 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
-    const user = await User.findOne({ email });
 
+    // Check if user already exists
+    const user = await User.findOne({ email });
     if (user) {
       return NextResponse.json(
-        { error: "user Already exists" },
+        { error: "User already exists" },
         { status: 400 }
       );
     }
+
+    // Hash the password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
+    // Create new user
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
     });
 
+    // Save the new user
     const savedUser = await newUser.save();
 
-    //send Verification email
+    // Generate verification token
     const hashedToken = await bcryptjs.hash(savedUser._id.toString(), 10);
     await User.findByIdAndUpdate(savedUser._id, {
       verifyToken: hashedToken,
-      verifyTokenExpiry: Date.now() + 3600000,
+      verifyTokenExpiry: Date.now() + 3600000, // 1 hour expiry
     });
-    const subject = `<a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">
-    <p>${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>
-    </a> `;
+
+    // Send verification email
+    const verificationLink = `${process.env.DOMAIN}/verifyemail?token=${hashedToken}`;
+    const subject = `
+      <a href="${verificationLink}">
+        <p>${verificationLink}</p>
+      </a>`;
+
     await sendEmail({
       email,
       emailType: "verification",
       message: subject,
     });
 
+    // Return success response
     return NextResponse.json({
-      message: "User Registered Successfully",
-      sucess: true,
+      message: "User registered successfully",
+      success: true,
       savedUser,
     });
   } catch (error: any) {
+    console.error("Registration Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

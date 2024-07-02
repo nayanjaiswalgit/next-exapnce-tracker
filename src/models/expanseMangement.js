@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+const categories = ['Food', 'Transportation', 'Utilities', 'Entertainment', 'Health', 'Investment','Other'];
 
 const accountSchema = new mongoose.Schema({
   userId: {
@@ -57,8 +58,12 @@ const montlyBalance =
 const ExpenseSchema = new Schema({
   amount: Number,
   description: String,
+  category: { 
+    type: String, 
+    enum: categories, 
+    required: true 
+  },
   user: { type: Schema.Types.ObjectId, ref: "User" },
-  account: { type: Schema.Types.ObjectId, ref: "Account" },
 });
 
 const Expense =
@@ -66,18 +71,35 @@ const Expense =
 
 const TransactionSchema = new Schema({
   name: String,
-  data: Date,
+  date: Date,
   amount: Number,
-  expenses: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Expense",
-    },
-  ],
+  account: { type: Schema.Types.ObjectId, ref: "Account" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  expenses: [ExpenseSchema], 
+  notes: { type: String }
+
 });
+
 
 const Transaction =
   mongoose.models.Transaction ||
   mongoose.modelNames("Transaction", TransactionSchema);
 
-export { Account, montlyBalance, Transaction, Expense };
+  const IncomeSchema = new Schema({
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    amount: Number,
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+    source:String,
+    });
+
+    const Income = mongoose.models.Income || 
+    mongoose.model("Income", IncomeSchema);
+
+export { Account, montlyBalance, Transaction, Expense, Income };
