@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import pic from "../../assets/pic.png";
 import logo from "../../assets/logo.png";
@@ -6,16 +8,20 @@ import { IoIosSettings } from "react-icons/io";
 import { PiWalletBold } from "react-icons/pi";
 import { BiRupee } from "react-icons/bi";
 import { TbDashboard } from "react-icons/tb";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const slidebarData = [
-  { name: "Dashboard", icon: <TbDashboard />,  },
-  { name: "Transactions", icon: <IoMdList /> ,selected: true },
-  { name: "Budget", icon: <PiWalletBold /> },
-  { name: "Income", icon: <BiRupee /> },
-  { name: "Settings", icon: <IoIosSettings /> },
-];
+  { name: "Dashboard", icon: <TbDashboard />, href: "dashboard" },
+  { name: "Transactions", icon: <IoMdList />, href: "expanse" },
+  { name: "Budget", icon: <PiWalletBold />, href: "budget" },
+  { name: "Income", icon: <BiRupee />, href: "income" },
+  { name: "Settings", icon: <IoIosSettings />, href: "settings" },
 
+];
 const Sidebar = () => {
+  const path = usePathname()
+
   return (
     <div className="w-20 md:w-[240px] max-w-[14rem] py-11  flex flex-col h-full">
       {/* Brand Icon */}
@@ -24,15 +30,26 @@ const Sidebar = () => {
         <span className="text-gray-300 text-lg hidden md:flex">Expansibee</span>
       </div>
       <div className="flex gap-1 flex-col flex-grow ">
-        {slidebarData.map((data, index) => (
-          <div
-            key={index}
-            className={`md:flex justify-left items-center gap-2 px-4  py-2 text-gray-300 ${data.selected && "bg-[#8b88888f] border-l-4  text-white" }`}
-          >
-            <div className="md:text-md text-xl flex items-center justify-center">{data.icon}</div>
-            <div className="hidden md:flex">{data.name}</div>
-          </div>
-        ))}
+        {slidebarData.map((data, index) => {
+          // Modify the href by appending '/expanse-tracker/' to each data.href
+          const href = `/expanse-tracker/${data.href}`;
+          console.log(href,path)
+          return (
+            <Link
+              key={index}
+              href={href}
+              className={`md:flex justify-left items-center gap-2 px-4 py-2 text-gray-300 ${
+                path === href &&
+                "bg-[#8b88888f] border-l-4 text-white"
+              }`}
+            >
+              <div className="md:text-md text-xl flex items-center justify-center">
+                {data.icon}
+              </div>
+              <div className="hidden md:flex">{data.name}</div>
+            </Link>
+          );
+        })}
       </div>
       {/* Bottom Section */}
       <div className=" gap-2 items-center mt-auto px-4 hidden md:flex">

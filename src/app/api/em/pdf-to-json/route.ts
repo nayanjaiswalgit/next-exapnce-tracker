@@ -1,29 +1,40 @@
-import { NextRequest, NextResponse } from "next/server";
-import pdf from "pdf-parse";
-import { promises as fs } from "fs";
-import path from "path";
+import formidable from 'formidable';
+import fs from 'fs';
+import pdf2json from 'pdf2json';
 
-export async function POST(request: NextRequest) {
-  try {
-    // Define the path to the PDF file
-    const pdfPath = path.join(process.cwd(), "diwlali.pdf");
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+export async function POST(req,res) => {
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error('Error parsing form data', err);
+      res.status(500).json({ error: 'Error parsing form data' });
+      return;
+    }
 
-    // Read the file asynchronously
-    const fileBuffer = await fs.readFile(pdfPath);
+    const { pdf } = files;
 
-    // Parse the PDF file
-    const data = await pdf(fileBuffer);
+    if (!pdf || pdf.type !== 'application/pdf') {
+      res.status(400).json({ error: 'Invalid or missing PDF file' });
+      return;
+    }
 
-    console.log(data);
+    const pdfParser = new pdf2json();
+    pdfParser.loadPDF(pdf.path);
 
-    // Return response with success message
-    return NextResponse.json({
-      message: "Success",
-      success: true,
-      data: data.text // You can return the parsed text if needed
+    pdfParser.on('pdfParser_dataError', (errData) => {
+      console.error('Error while converting PDF to JSON:', errData);
+      res.status(500).json({ error: 'Error converting PDF to JSON' });
     });
-  } catch (error: any) {
-    console.error("Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+
+    pdfParser.on('pdfParser_dataReady', () => {
+      const pdfData = pdfParser.getRawTextContent();
+      // Here you can process the pdfData object as needed
+      res.status(200).json({ pdfData });
+    });
+  });
 }

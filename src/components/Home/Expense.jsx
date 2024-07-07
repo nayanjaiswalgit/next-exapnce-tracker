@@ -6,7 +6,7 @@ let ms = new Date().toLocaleDateString("en-GB");
 
 const Expense = () => {
   return (
-    <div className="  px-4 py-3 flex m-2 text-black h-20 border-2 rounded-2xl bg-rgba-white items-center justify-between  ">
+    <div className="  px-4 py-3 flex m-2 text-black h-20 border-2 rounded-2xl bg-white items-center justify-between  ">
       <div className=" flex justify-start  items-center h-full gap-2 truncate w-full max-w-[65%] overflow-hidden ">
         <div>
         <div className="w-14 h-14 rounded-2xl bg-blue-300 grid place-items-center  ">
