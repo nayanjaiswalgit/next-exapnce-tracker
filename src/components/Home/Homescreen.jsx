@@ -2,6 +2,7 @@ import SearchBar from "./SearchBar";
 import Filter from "./Filter";
 import Table from "./Table";
 import Image from "next/image";
+import { fetchExpense } from "@/lib/data";
 
 const iconMap = {
   'Amazon': 'amazon.png',
@@ -35,7 +36,10 @@ function renderIcon(title) {
 
 
 
-const Homescreen = () => {
+
+const Homescreen = async () => {
+
+  const {data} =  await fetchExpense()
 
 
   const columns = [
@@ -91,7 +95,7 @@ const Homescreen = () => {
       <Filter />
     </div>
     <div className="px-4 ">
-      <Table columns={columns} dataSource={data.filter((text)=>text.Balance)} />
+      {/* <Table columns={columns} dataSource={data?.filter((text)=>text.Balance)} /> */}
     </div>
   </div>
   );

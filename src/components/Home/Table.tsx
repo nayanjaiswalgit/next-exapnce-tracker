@@ -34,9 +34,8 @@ const Table: React.FC<Props> = ({ columns, dataSource }) => {
             {columns.map((column) => (
               <td
                 key={`${rowIndex}-${column.key}`}
-                className={`${column?.className ? column.className : "px-4 py-2 text-sm text-gray-700 font-medium " }  `}
+                className={`${column?.className ? column.className : "px-4 py-2 text-sm text-gray-700 font-medium whitespace-nowrap	 " }  `}
               >
-                {console.log(column)}
                 {column.render
                   ? column.render(row[column.dataIndex], row)
                   : row[column.dataIndex]}

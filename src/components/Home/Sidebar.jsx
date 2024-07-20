@@ -33,7 +33,6 @@ const Sidebar = () => {
         {slidebarData.map((data, index) => {
           // Modify the href by appending '/expanse-tracker/' to each data.href
           const href = `/expanse-tracker/${data.href}`;
-          console.log(href,path)
           return (
             <Link
               key={index}

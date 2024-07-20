@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {  Tilt_Neon } from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/context/AuthProvider";
 
 const font = Tilt_Neon({ subsets: ["latin"] });
 
@@ -16,7 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={ ` overflow-hidden ${font.className}`}>{children}</body>
+      <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+      <body className={ `  ${font.className}  `}>{children}</body>
+     
     </html>
   );
 }
+
+import { SessionProvider } from "next-auth/react"
+

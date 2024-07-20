@@ -3,6 +3,7 @@ import User from "@/models/userModal";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { sendEmail } from "@/helpers/mailer";
+import VerificationEmail from "../../../../../emails/VerificationsEmail";
 
 connect();
 
@@ -41,16 +42,15 @@ export async function POST(request: NextRequest) {
       verifyTokenExpiry: Date.now() + 3600000, // 1 hour expiry
     });
 
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
     // Send verification email
     const verificationLink = `${process.env.DOMAIN}/verifyemail?token=${hashedToken}`;
-    const subject = `
-      <a href="${verificationLink}">
-        <p>${verificationLink}</p>
-      </a>`;
+    
+    const subject =  VerificationEmail({username: username, otp:verifyCode , url: verificationLink })
 
     await sendEmail({
       email,
-      emailType: "verification",
+      emailType: "verification", 
       message: subject,
     });
 
@@ -62,6 +62,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Registration Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({success:false,  message: error.message }, { status: 500 });
   }
 }

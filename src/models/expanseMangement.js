@@ -1,5 +1,13 @@
 import mongoose, { Schema } from "mongoose";
-const categories = ['Food', 'Transportation', 'Utilities', 'Entertainment', 'Health', 'Investment','Other'];
+const categories = [
+  "Food",
+  "Transportation",
+  "Utilities",
+  "Entertainment",
+  "Health",
+  "Investment",
+  "Other",
+];
 
 const accountSchema = new mongoose.Schema({
   userId: {
@@ -58,48 +66,63 @@ const montlyBalance =
 const ExpenseSchema = new Schema({
   amount: Number,
   description: String,
-  category: { 
-    type: String, 
-    enum: categories, 
-    required: true 
+  icon: String,
+  category: {
+    type: String,
+    enum: categories,
+    required: true,
   },
   user: { type: Schema.Types.ObjectId, ref: "User" },
+  isArchived: Boolean,
 });
 
 const Expense =
   mongoose.models.Expense || mongoose.model("Expense", ExpenseSchema);
 
 const TransactionSchema = new Schema({
+  transactionId: { type: String, unique: true, required: true },
   name: String,
   date: Date,
   amount: Number,
+  type: Boolean,
   account: { type: Schema.Types.ObjectId, ref: "Account" },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  expenses: [ExpenseSchema], 
-  notes: { type: String }
-
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  expenses: [ExpenseSchema],
+  notes: { type: String },
+  isArchived: Boolean,
 });
-
 
 const Transaction =
   mongoose.models.Transaction ||
   mongoose.modelNames("Transaction", TransactionSchema);
 
-  const IncomeSchema = new Schema({
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    amount: Number,
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-    source:String,
-    });
+const IncomeSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  amount: Number,
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  source: String,
+});
 
-    const Income = mongoose.models.Income || 
-    mongoose.model("Income", IncomeSchema);
+const Income = mongoose.models.Income || mongoose.model("Income", IncomeSchema);
 
-export { Account, montlyBalance, Transaction, Expense, Income };
+const mappingConfigSchema = new mongoose.Schema({
+  bank: { type: String, required: true, unique: true },
+  txnId: { type: String, required: true },
+  debit: { type: String, required: true },
+  credit: { type: String, required: true },
+  balance: { type: String, required: true },
+  metaData: { type: String },
+  particulars: { type: String, required: true },
+});
+
+const MappingConfig =
+  mongoose.models.MappingConfig ||
+  mongoose.model("MappingConfig", mappingConfigSchema);
+export { Account, montlyBalance, Transaction, Expense, Income, MappingConfig };
