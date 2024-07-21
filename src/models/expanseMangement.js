@@ -64,37 +64,41 @@ const montlyBalance =
   mongoose.model("montlyBalance", montlyBalanceSchema);
 
 const ExpenseSchema = new Schema({
-  amount: Number,
-  description: String,
-  icon: String,
-  category: {
-    type: String,
-    enum: categories,
-    required: true,
-  },
+  name: String,
+  price: Number,
+  quantity: { type: Number, required: true, default: 1 },
   user: { type: Schema.Types.ObjectId, ref: "User" },
+  expenseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Transaction', required: true },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+    required: false,
+  },
   isArchived: Boolean,
 });
 
 const Expense =
   mongoose.models.Expense || mongoose.model("Expense", ExpenseSchema);
 
-const TransactionSchema = new Schema({
+const transactionSchema = new mongoose.Schema({
   transactionId: { type: String, unique: true, required: true },
-  name: String,
-  date: Date,
-  amount: Number,
-  type: Boolean,
-  account: { type: Schema.Types.ObjectId, ref: "Account" },
+  merchant: String,
+  date: { type: Date, default: Date.now },
+  type: { type: String, enum: ['credit', 'debit'], default: 'debit' },
+  account: { type: mongoose.Schema.Types.ObjectId, ref: "Account" },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  expenses: [ExpenseSchema],
+  expenses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Expense", required: true }],
   notes: { type: String },
-  isArchived: Boolean,
+  isArchived: { type: Boolean, default: false },
 });
+
+
 
 const Transaction =
   mongoose.models.Transaction ||
-  mongoose.modelNames("Transaction", TransactionSchema);
+  mongoose.model("Transaction", transactionSchema);
+
+
 
 const IncomeSchema = new Schema({
   userId: {
@@ -112,6 +116,23 @@ const IncomeSchema = new Schema({
 
 const Income = mongoose.models.Income || mongoose.model("Income", IncomeSchema);
 
+
+
+const CategorySchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  description: String,
+  icon: String,
+  isDefault: { type: Boolean, default: false },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', default: null }
+});
+
+const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
+
+
 const mappingConfigSchema = new mongoose.Schema({
   bank: { type: String, required: true, unique: true },
   txnId: { type: String, required: true },
@@ -125,4 +146,4 @@ const mappingConfigSchema = new mongoose.Schema({
 const MappingConfig =
   mongoose.models.MappingConfig ||
   mongoose.model("MappingConfig", mappingConfigSchema);
-export { Account, montlyBalance, Transaction, Expense, Income, MappingConfig };
+export { Account, montlyBalance, Transaction, Expense, Income, MappingConfig, Category };

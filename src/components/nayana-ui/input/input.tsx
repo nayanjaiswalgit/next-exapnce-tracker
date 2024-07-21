@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input: React.FC<any> = ({ label, ...props }) =>
+const Input: React.FC<any> = ({ label, className, ...props }) =>
 
 
       <div>

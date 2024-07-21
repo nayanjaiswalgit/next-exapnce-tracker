@@ -18,7 +18,7 @@ const Table: React.FC<Props> = ({ columns, dataSource }) => {
     <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-md ">
       <thead>
         <tr>
-          {columns.map((column) => (
+          {columns?.map((column) => (
             <th
               key={column.key}
               className="px-4  bg-gray-200 py-2 text-left text-sm font-semibold text-black uppercase tracking-wider "
@@ -29,12 +29,12 @@ const Table: React.FC<Props> = ({ columns, dataSource }) => {
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200 ">
-        {dataSource.map((row, rowIndex) => (
+        {dataSource?.map((row, rowIndex) => (
           <tr key={rowIndex} className=" mb-3 ">
             {columns.map((column) => (
               <td
                 key={`${rowIndex}-${column.key}`}
-                className={`${column?.className ? column.className : "px-4 py-2 text-sm text-gray-700 font-medium whitespace-nowrap	 " }  `}
+                className={`${column?.className ? column.className : "px-4 py-2 text-sm text-gray-700 font-medium whitespace-nowrap	 "}  `}
               >
                 {column.render
                   ? column.render(row[column.dataIndex], row)

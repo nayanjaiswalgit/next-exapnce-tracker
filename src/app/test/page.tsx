@@ -1,4 +1,3 @@
-
 'use client'
 import React, { useState } from 'react';
 import { Transition } from 'react-transition-group';
@@ -19,7 +18,7 @@ const transitionStyles = {
     exited: { maxHeight: 0, opacity: 0 },
 };
 
-const ExpandableTable = ({ expenses }) => {
+const ExpandableTable = ({ expenses, theme }) => {
     const [expandedRows, setExpandedRows] = useState([]);
     const [expandAll, setExpandAll] = useState(false);
     const [editMode, setEditMode] = useState({});
@@ -68,28 +67,28 @@ const ExpandableTable = ({ expenses }) => {
     };
 
     return (
-        <div className="overflow-x-auto">
+        <div className={`overflow-x-auto ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
             <button
                 className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
                 onClick={handleExpandAll}
             >
                 {expandAll ? 'Collapse All' : 'Expand All'}
             </button>
-            <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <table className="min-w-full shadow-md rounded-lg overflow-hidden">
                 <thead>
-                    <tr>
-                        <th className="px-4 py-2 text-left bg-gray-200">Title</th>
-                        <th className="px-4 py-2 text-left bg-gray-200">Description</th>
-                        <th className="px-4 py-2 text-left bg-gray-200">Date</th>
-                        <th className="px-4 py-2 text-left bg-gray-200">Total</th>
-                        <th className="px-4 py-2 text-left bg-gray-200">Details</th>
-                        <th className="px-4 py-2 text-left bg-gray-200">Actions</th>
+                    <tr className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}>
+                        <th className="px-4 py-2 text-left">Title</th>
+                        <th className="px-4 py-2 text-left">Description</th>
+                        <th className="px-4 py-2 text-left">Date</th>
+                        <th className="px-4 py-2 text-left">Total</th>
+                        <th className="px-4 py-2 text-left">Details</th>
+                        <th className="px-4 py-2 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {editedExpenses.map((expense, index) => (
                         <React.Fragment key={index}>
-                            <tr className="border-b cursor-pointer">
+                            <tr className={`border-b cursor-pointer ${theme === 'dark' ? 'border-gray-700' : 'border-gray-300'}`}>
                                 <td className="px-4 py-2">
                                     {editMode[index] ? (
                                         <input
@@ -184,7 +183,7 @@ const ExpandableTable = ({ expenses }) => {
                                                     ...defaultStyle,
                                                     ...transitionStyles[state]
                                                 }}
-                                                className="px-4 py-2 bg-gray-100"
+                                                className={`px-4 py-2 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'}`}
                                             >
                                                 {expense.expenses.length > 0 ? (
                                                     <ul>
@@ -210,8 +209,6 @@ const ExpandableTable = ({ expenses }) => {
         </div>
     );
 };
-
-
 
 const initialExpenses = [
     {
@@ -290,11 +287,22 @@ const initialExpenses = [
 
 const Home = () => {
     const [expenses, setExpenses] = useState(initialExpenses);
+    const [theme, setTheme] = useState('light'); // Default theme
+
+    const toggleTheme = () => {
+        setTheme(theme === 'light' ? 'dark' : 'light');
+    };
 
     return (
-        <div className="container mx-auto p-4">
+        <div className={`container mx-auto p-4 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+            <button
+                onClick={toggleTheme}
+                className={`mb-4 px-4 py-2 rounded ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}
+            >
+                Toggle Theme
+            </button>
             <h1 className="text-2xl font-bold mb-4">Expenses</h1>
-            <ExpandableTable expenses={expenses} />
+            <ExpandableTable expenses={expenses} theme={theme} />
         </div>
     );
 };

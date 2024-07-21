@@ -38,7 +38,7 @@ const Sidebar = () => {
               key={index}
               href={href}
               className={`md:flex justify-left items-center gap-2 px-4 py-2 text-gray-300 ${
-                path === href &&
+                data.href === 'expanse' &&
                 "bg-[#8b88888f] border-l-4 text-white"
               }`}
             >
@@ -62,7 +62,7 @@ const Sidebar = () => {
           />
         </div>
         <div>
-          <div className="font-semibold text-gray-200">Nayan</div>
+          <div className=" text-gray-200">Nayan</div>
           <div className="text-xs text-gray-400">testing@gmail.com</div>
         </div>
       </div>

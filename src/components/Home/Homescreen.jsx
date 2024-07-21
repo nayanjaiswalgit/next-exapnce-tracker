@@ -2,7 +2,6 @@ import SearchBar from "./SearchBar";
 import Filter from "./Filter";
 import Table from "./Table";
 import Image from "next/image";
-import { fetchExpense } from "@/lib/data";
 
 const iconMap = {
   'Amazon': 'amazon.png',
@@ -38,10 +37,154 @@ function renderIcon(title) {
 
 
 const Homescreen = async () => {
+ const initialExpenses = [
+    {
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        expenses: [],
+        title: "Weekly groceries",
+        total: 300,
+        description: "Groceries for the week"
+    },
+    {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+   },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+   },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+   },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+   },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+    },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+    },
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+    }, {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+        title: "Weekly groceries"
+    },
 
-  const {data} =  await fetchExpense()
 
+     {
+        transactionId: "12344555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [],
+       title: "Weekly groceries"
 
+    },
+    {
+        transactionId: "1234d4555",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        expenses: [],
+        title: "Weekly groceries"
+    },
+    {
+        transactionId: "1234d4545655",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        expenses: [],
+        title: "Weekly groceries"
+    },
+    {
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        expenses: [
+            {
+                name: "Fruit and vegetables",
+                quantity: 1,
+                price: 10,
+                category: "groceries"
+            },
+            {
+                name: "Fruit and vegetables",
+                quantity: 1,
+                price: 10,
+                category: "groceries"
+            }
+        ],
+        title: "Weekly groceries"
+    },
+    {
+        transactionId: "1234w4545dd655",
+        icon: "Store",
+        date: "2024-07-21T00:00:00.000Z",
+        total: 300,
+        description: "Groceries for the week",
+        expenses: [
+            {
+                name: "Fruit and vegetables",
+                quantity: 1,
+                price: 10,
+                category: "groceries"
+            },
+            {
+                name: "Fruit and vegetables",
+                quantity: 1,
+                price: 10,
+                category: "groceries"
+            }
+        ],
+        title: "Weekly groceries"
+    }
+];
   const columns = [
     {
       title: "icon",
@@ -52,7 +195,7 @@ const Homescreen = async () => {
     },
     {
       title: "Description",
-      dataIndex: "Particulars",
+      dataIndex: "description",
       key: "name",
     },
     {
@@ -62,8 +205,10 @@ const Homescreen = async () => {
     },
     {
       title: "Date",
-      dataIndex: "Date",
+      dataIndex: "date",
       key: "address",
+      render : (date) =>new Date(date).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) 
+
     },
     {
       title: "Amount",
@@ -87,7 +232,7 @@ const Homescreen = async () => {
 
 
 
-
+  const data = []
   return (
     <div className="bg-[#fafafa]  w-full p-2 ">
     <div className="flex p-3 m-4 bg-white rounded-lg items-center justify-between">
@@ -95,7 +240,7 @@ const Homescreen = async () => {
       <Filter />
     </div>
     <div className="px-4 ">
-      {/* <Table columns={columns} dataSource={data?.filter((text)=>text.Balance)} /> */}
+     {initialExpenses?.length > 0 && <Table columns={columns} dataSource={initialExpenses  } />}
     </div>
   </div>
   );
